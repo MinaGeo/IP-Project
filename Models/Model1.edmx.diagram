@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="bbe6c1d67cc248c6a310fafb8ab8c6c3" Name="Diagram1" ZoomLevel="63">
+        <EntityTypeShape EntityType="TopG_clothingModel.cart" Width="1.5" PointX="3" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="TopG_clothingModel.cartItem" Width="1.5" PointX="5.25" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="TopG_clothingModel.feedback" Width="1.5" PointX="3" PointY="7.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="TopG_clothingModel.payment" Width="1.5" PointX="5.25" PointY="8.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="TopG_clothingModel.person" Width="1.5" PointX="0.75" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="TopG_clothingModel.product" Width="1.5" PointX="3" PointY="11.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="TopG_clothingModel.store" Width="1.5" PointX="3" PointY="15.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="TopG_clothingModel.sysdiagram" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TopG_clothingModel.voucherCustomer" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="TopG_clothingModel.voucher" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
+        <AssociationConnector Association="TopG_clothingModel.FK_cart_person" ManuallyRouted="false" />
+        <AssociationConnector Association="TopG_clothingModel.FK_cartItem_cart" ManuallyRouted="false" />
+        <AssociationConnector Association="TopG_clothingModel.FK_payment_cart" ManuallyRouted="false" />
+        <AssociationConnector Association="TopG_clothingModel.FK_cartItem_products" ManuallyRouted="false" />
+        <AssociationConnector Association="TopG_clothingModel.FK_feedback_person" ManuallyRouted="false" />
+        <AssociationConnector Association="TopG_clothingModel.FK_payment_person" ManuallyRouted="false" />
+        <AssociationConnector Association="TopG_clothingModel.FK_voucherCustomer_person" ManuallyRouted="false" />
+        <AssociationConnector Association="TopG_clothingModel.FK_voucherCustomer_vouchers" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="TopG_clothingModel.productSold" Width="1.5" PointX="5.25" PointY="15.75" />
+        <AssociationConnector Association="TopG_clothingModel.FK_productSold_products" />
+        <EntityTypeShape EntityType="TopG_clothingModel.wishlist" Width="1.5" PointX="5.25" PointY="11.875" />
+        <AssociationConnector Association="TopG_clothingModel.FK_wishlist_person" />
+        <AssociationConnector Association="TopG_clothingModel.FK_wishlist_products" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
