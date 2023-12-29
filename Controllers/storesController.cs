@@ -34,7 +34,13 @@ namespace WebApplication1.Controllers
             }
             return View(store);
         }
-
+        [HttpPost, ActionName("Details")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DetailsBack(int id)
+        {
+            product product = db.products.Find(id);
+            return RedirectToAction("Index");
+        }
         // GET: stores/Create
         public ActionResult Create()
         {
