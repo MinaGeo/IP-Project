@@ -127,6 +127,7 @@ namespace WebApplication1.Controllers
                     Session["Person_mail"] = rec.person_email;
                 }
                 Session["Per_id"] = rec.person_id;
+                Session["Login_valid"] = true;
             
                 return RedirectToAction("Index","Home");
             }
@@ -176,6 +177,17 @@ namespace WebApplication1.Controllers
             }
 
             return View(person);
+        }
+
+        public ActionResult Logout()
+        {
+            // Clear user-related session variables or perform any other logout actions
+            Session["Login_valid"] = false;
+            Session["Per_role"] = null;
+            Session["Per_username"] = null;
+            Session["Per_person"] = null;
+
+            return RedirectToAction("Index", "Home");
         }
 
 

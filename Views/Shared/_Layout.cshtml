@@ -33,28 +33,6 @@
                 <li>    <a>@Html.ActionLink("Our stores", "Index", "stores", null, new { @class = "boldclass" })</a></li>
 
 
-                <!-- Shop now with Sub-navigation -->
-                @*<li class="dropdown">
-         <a href="Shopnow.html" class="dropbtn"><b>Shop now</b></a>
-         <div class="dropdown-content">
-             <div class="nested-dropdown">
-                 <a href="Womeh_Hoodies.html"><b>Women Section</b></a>
-                 <div class="sub-nested-dropdown">
-                     <a href="Womeh_Hoodies.html">Women Hoodies</a>
-                     <a href="sunglasses.html">Women Glasses</a>
-                 </div>
-             </div>
-             <div class="nested-dropdown">
-                 <a href="Men_Hoodies.html"><b>Men Section</b></a>
-                 <div class="sub-nested-dropdown">
-                     <a href="Men_Hoodies.html">Men Hoodies</a>
-                     <a href="sunglasses.html">Men Glasses</a>
-                 </div>
-             </div>
-
-         </div>
-        </li>*@
-
                 <li>@Html.ActionLink("About-us", "About", "Home", null, new { @class = "boldclass" })</li>
 
                 <li class="dropdown">
@@ -65,13 +43,23 @@
                         @Html.ActionLink("FAQS", "FAQ", "UserHelp", null, new { @class = "boldclass" })
                     </div>
                 </li>
-                <li>@Html.ActionLink("Login", "Login", "Account", null, new { @class = "boldclass" })</li>
+
+                @if (Session["Login_valid"] == null || !(bool)Session["Login_valid"])
+                {
+                    <li>@Html.ActionLink("Login", "Login", "Account", null, new { @class = "boldclass" })</li>
+                }
+                else
+                {
+                    <li>@Html.ActionLink("Logout", "Logout", "Account", null, new { @class = "boldclass" })</li>
+                }
+
+
                 <li><a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a></li>
 
                 @if (Session["Per_role"] != null && Session["Per_role"].ToString() == "admin")
                 {
                     <li class="dropdown">
-                        <a href="#" class="dropbtn"><b>Admin Control</b></a>
+                        <a href="#" class="dropbtn" style="color: red;"><b>Admin</b></a>
                         <div class="dropdown-content">
                             @Html.ActionLink("Users details", "Index", "Account", null, new { @class = "boldclass" })
                         </div>
