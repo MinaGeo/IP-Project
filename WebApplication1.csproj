@@ -132,7 +132,9 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\OrdersController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
+    <Compile Include="Controllers\productSoldsController.cs" />
     <Compile Include="Controllers\storesController.cs" />
     <Compile Include="Controllers\UserHelpController.cs" />
     <Compile Include="Global.asax.cs">
@@ -152,6 +154,7 @@
     </Compile>
     <Compile Include="Models\metaClassFeedback.cs" />
     <Compile Include="Models\metaClassProduct.cs" />
+    <Compile Include="Models\metaClassProductSold.cs" />
     <Compile Include="Models\metaClassStores.cs" />
     <Compile Include="Models\metaDataAccount.cs" />
     <Compile Include="Models\Model1.Context.cs">
@@ -182,12 +185,6 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\productSold.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\sp_helpdiagramdefinition_Result.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\sp_helpdiagrams_Result.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\store.cs">
@@ -424,6 +421,11 @@
     <Content Include="Views\UserHelp\Edit_feedback.cshtml" />
     <Content Include="Views\UserHelp\feedback.cshtml" />
     <Content Include="Views\Cart\Index.cshtml" />
+    <Content Include="Views\Cart\OrderDetails.cshtml" />
+    <Content Include="Views\productSolds\Index.cshtml" />
+    <Content Include="Views\productSolds\Details.cshtml" />
+    <Content Include="Views\Orders\Details.cshtml" />
+    <Content Include="Views\Orders\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

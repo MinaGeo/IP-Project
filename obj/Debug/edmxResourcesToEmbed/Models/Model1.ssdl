@@ -10,7 +10,7 @@
   </EntityType>
   <EntityType Name="Cart_item">
     <Key>
-      <PropertyRef Name="product_id" />
+      <PropertyRef Name="cartItem_id" />
     </Key>
     <Property Name="cartItem_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="product_id" Type="int" Nullable="false" />
@@ -93,10 +93,10 @@
     <Key>
       <PropertyRef Name="product_id" />
     </Key>
-    <Property Name="product_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="product_id" Type="int" Nullable="false" />
     <Property Name="product_quantity" Type="int" />
     <Property Name="product_price" Type="int" />
-    <Property Name="product_date" Type="nchar" MaxLength="10" />
+    <Property Name="product_date" Type="date" />
   </EntityType>
   <EntityType Name="store">
     <Key>
@@ -148,9 +148,21 @@
     <Property Name="person_id" Type="int" Nullable="false" />
     <Property Name="product_id" Type="int" Nullable="false" />
   </EntityType>
+  <Association Name="FK_Cart_item_person">
+    <End Role="person" Type="Self.person" Multiplicity="0..1" />
+    <End Role="Cart_item" Type="Self.Cart_item" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="person">
+        <PropertyRef Name="person_id" />
+      </Principal>
+      <Dependent Role="Cart_item">
+        <PropertyRef Name="User_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_Cart_item_products">
     <End Role="products" Type="Self.products" Multiplicity="1" />
-    <End Role="Cart_item" Type="Self.Cart_item" Multiplicity="0..1" />
+    <End Role="Cart_item" Type="Self.Cart_item" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="products">
         <PropertyRef Name="product_id" />
@@ -193,6 +205,18 @@
       </Principal>
       <Dependent Role="feedback">
         <PropertyRef Name="person_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Orders_person">
+    <End Role="person" Type="Self.person" Multiplicity="0..1" />
+    <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="person">
+        <PropertyRef Name="person_id" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="User_ID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -280,37 +304,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
-  <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
-    <Parameter Name="owner_id" Type="int" Mode="In" />
-    <Parameter Name="version" Type="int" Mode="In" />
-    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
-  </Function>
-  <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
-    <Parameter Name="owner_id" Type="int" Mode="In" />
-    <Parameter Name="version" Type="int" Mode="In" />
-    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
-  </Function>
-  <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
-    <Parameter Name="owner_id" Type="int" Mode="In" />
-  </Function>
-  <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
-    <Parameter Name="owner_id" Type="int" Mode="In" />
-  </Function>
-  <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
-    <Parameter Name="owner_id" Type="int" Mode="In" />
-  </Function>
-  <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
-    <Parameter Name="owner_id" Type="int" Mode="In" />
-    <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
-  </Function>
-  <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
   <EntityContainer Name="TopG_clothingModelStoreContainer">
     <EntitySet Name="cart" EntityType="Self.cart" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Cart_item" EntityType="Self.Cart_item" Schema="dbo" store:Type="Tables" />
@@ -326,6 +319,10 @@
     <EntitySet Name="voucherCustomer" EntityType="Self.voucherCustomer" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="vouchers" EntityType="Self.vouchers" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="wishlist" EntityType="Self.wishlist" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Cart_item_person" Association="Self.FK_Cart_item_person">
+      <End Role="person" EntitySet="person" />
+      <End Role="Cart_item" EntitySet="Cart_item" />
+    </AssociationSet>
     <AssociationSet Name="FK_Cart_item_products" Association="Self.FK_Cart_item_products">
       <End Role="products" EntitySet="products" />
       <End Role="Cart_item" EntitySet="Cart_item" />
@@ -341,6 +338,10 @@
     <AssociationSet Name="FK_feedback_person" Association="Self.FK_feedback_person">
       <End Role="person" EntitySet="person" />
       <End Role="feedback" EntitySet="feedback" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Orders_person" Association="Self.FK_Orders_person">
+      <End Role="person" EntitySet="person" />
+      <End Role="Orders" EntitySet="Orders" />
     </AssociationSet>
     <AssociationSet Name="FK_payment_cart" Association="Self.FK_payment_cart">
       <End Role="cart" EntitySet="cart" />

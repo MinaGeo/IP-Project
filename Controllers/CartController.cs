@@ -8,7 +8,7 @@ using WebApplication1.Models;
 
 public class CartController : Controller
 {
-    private TopG_clothingEntities1 db = new TopG_clothingEntities1();
+    private TopG_clothingEntities db = new TopG_clothingEntities();
 
     public ActionResult Index()
     {
@@ -21,11 +21,18 @@ public class CartController : Controller
         return View(cart_Items);
     }
 
+    public ActionResult OrderDetails()
+    {
+
+        return View();
+    }
+
     [HttpPost]
     public ActionResult AddToCart(int productId)
     {
         // Assuming you have a way to identify the current user
         int userId = GetCurrentUserId();
+        
 
         // Check if the product is already in the cart
         var existingCartItem = db.Cart_item.FirstOrDefault(c => c.User_id == userId && c.product_id == productId);
@@ -38,16 +45,19 @@ public class CartController : Controller
         }
         else
         {
-            // Add a new item to the cart if not already in the cart
-            Cart_item newCartItem = new Cart_item
+            if (ModelState.IsValid)
             {
-                User_id = userId,
-                product_id = productId,
-                cartItem_product_qty = 1  // You can set the initial quantity as needed
-            };
+                // Add a new item to the cart if not already in the cart
+                Cart_item newCartItem = new Cart_item
+                {
+                    User_id = userId,
+                    product_id = productId,
+                    cartItem_product_qty = 1  // You can set the initial quantity as needed
+                };
 
-            db.Cart_item.Add(newCartItem);
-            db.SaveChanges();
+                db.Cart_item.Add(newCartItem);
+                db.SaveChanges();
+            }
 
         }
 
@@ -115,6 +125,84 @@ public class CartController : Controller
         }
     }
 
+    [HttpPost]
+    public ActionResult Checkout()
+    {
+        // Get the user ID (you may need to implement user authentication)
+        int userId = GetCurrentUserId(); // Replace this with the actual logic to get the user ID
+        List<Cart_item> cartItems = db.Cart_item.Where(c => c.User_id == userId).ToList();
+        if (cartItems.Count > 0)
+        {
+          
+            // Create an order
+            Order order = new Order
+            {
+                User_ID = userId,
+                Order_Date = DateTime.Now,
+                Total_Amount = cartItems.Sum(item => item.product.product_price * item.cartItem_product_qty),
+                Payment_Method = "Credit Card" // You can modify this based on your payment method handling
+            }; // You need to calculate the total based on your cart items
+
+            using (var context = new TopG_clothingEntities())
+            {
+                context.Orders.Add(order);
+                context.SaveChanges();
+            }
+            // Create ProductSold records
+            foreach (var cartItem in cartItems)
+            {
+                using (var context = new TopG_clothingEntities())
+                {
+                    // Check if the productSold record already exists
+                    var existingProductSold = context.productSolds
+                        .SingleOrDefault(p => p.product_id == cartItem.product_id);
+
+                    if (existingProductSold != null)
+                    {
+                        // If it exists, update the quantity
+                        existingProductSold.product_quantity += cartItem.cartItem_product_qty;
+                    }
+                    else
+                    {
+                        // If it doesn't exist, create a new record
+                        productSold productSold = new productSold
+                        {
+                            product_id = cartItem.product_id,
+                            product_quantity = cartItem.cartItem_product_qty,
+                            product_price = cartItem.product.product_price,
+                            product_date = DateTime.Now
+                        };
+
+                        context.productSolds.Add(productSold);
+                    }
+
+                    context.SaveChanges();
+                }
+            }
+
+            // Save the order to the database
+            // Assuming you have a DbContext named ApplicationDbContext
+
+
+            // Remove items from the cart (you need to implement this method)
+            db.Cart_item.RemoveRange(cartItems);
+            db.SaveChanges();
+
+            // You can return a success message or redirect to a thank-you page
+            // Prepare data for the view
+            ViewBag.OrderId = order.Order_ID;
+            ViewBag.OrderDate = order.Order_Date;
+            ViewBag.TotalAmount = order.Total_Amount;
+
+            // Redirect to the OrderDetails view
+            return View("OrderDetails");
+        }
+        else
+        {
+            ViewBag.ErrorMessage = "Your cart is empty.";
+            return View("Index", cartItems); // You can modify this based on your needs
+        }
+    }
     private int GetCurrentUserId()
     {
         // Replace this with your logic to get the current user's ID
@@ -127,4 +215,5 @@ public class CartController : Controller
         // Default value if user ID is not available
         return 0;
     }
+
 }

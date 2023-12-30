@@ -19,5 +19,7 @@ namespace WebApplication1.Models
         public Nullable<System.DateTime> Order_Date { get; set; }
         public Nullable<double> Total_Amount { get; set; }
         public string Payment_Method { get; set; }
+    
+        public virtual person person { get; set; }
     }
 }

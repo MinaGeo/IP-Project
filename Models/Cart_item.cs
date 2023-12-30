@@ -21,6 +21,7 @@ namespace WebApplication1.Models
         public Nullable<double> cart_total { get; set; }
         public Nullable<int> User_id { get; set; }
     
+        public virtual person person { get; set; }
         public virtual product product { get; set; }
     }
 }

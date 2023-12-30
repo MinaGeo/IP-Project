@@ -12,7 +12,7 @@ namespace WebApplication1.Controllers
 {
     public class storesController : Controller
     {
-        private TopG_clothingEntities1 db = new TopG_clothingEntities1();
+        private TopG_clothingEntities db = new TopG_clothingEntities();
 
         // GET: stores
         public ActionResult Index()

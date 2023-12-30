@@ -15,7 +15,7 @@ namespace WebApplication1.Controllers
     {
         // GET: Products
 
-        private TopG_clothingEntities1 db = new TopG_clothingEntities1();
+        private TopG_clothingEntities db = new TopG_clothingEntities();
 
         public ActionResult WomenHoodies()
         {

@@ -15,7 +15,7 @@ namespace WebApplication1.Controllers
 
         // GET: Account
         //TASK OF LOGIN//
-        private TopG_clothingEntities1 db = new TopG_clothingEntities1();
+        private TopG_clothingEntities db = new TopG_clothingEntities();
 
 
         public ActionResult Details(int? id)
@@ -188,10 +188,29 @@ namespace WebApplication1.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-
         public ActionResult ForgetPassword()
         {
             return View();
+        }
+
+        [HttpPost]
+        [ActionName("ForgetPassword")]
+        [ValidateAntiForgeryToken]
+        public ActionResult forgetPass_post([Bind(Include = "person_email,person_password")] person per, string person_newpass)
+        {
+            var rec = db.people.Where(x => x.person_email == per.person_email && x.person_password == per.person_password).FirstOrDefault();
+
+            if (rec != null)
+            {
+
+                per.person_password = person_newpass;
+                return RedirectToAction("Login", "Home");
+            }
+            else
+            {
+                ViewBag.error = "Sorry, Invalid email";
+                return View(per);
+            }
         }
     }
 }

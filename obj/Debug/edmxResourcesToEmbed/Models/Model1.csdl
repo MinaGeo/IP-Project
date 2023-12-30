@@ -10,6 +10,19 @@
     <NavigationProperty Name="person" Relationship="Self.FK_cart_person" FromRole="cart" ToRole="person" />
     <NavigationProperty Name="payments" Relationship="Self.FK_payment_cart" FromRole="cart" ToRole="payment" />
   </EntityType>
+  <EntityType Name="Cart_item">
+    <Key>
+      <PropertyRef Name="cartItem_id" />
+    </Key>
+    <Property Name="cartItem_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="product_id" Type="Int32" Nullable="false" />
+    <Property Name="cartItem_product_qty" Type="Int32" />
+    <Property Name="cartItem_date" Type="DateTime" Precision="0" />
+    <Property Name="cart_total" Type="Double" />
+    <Property Name="User_id" Type="Int32" />
+    <NavigationProperty Name="person" Relationship="Self.FK_Cart_item_person" FromRole="Cart_item" ToRole="person" />
+    <NavigationProperty Name="product" Relationship="Self.FK_Cart_item_products" FromRole="Cart_item" ToRole="products" />
+  </EntityType>
   <EntityType Name="cartItem">
     <Key>
       <PropertyRef Name="cartItem_id" />
@@ -30,6 +43,17 @@
     <Property Name="feedback_desc" Type="String" MaxLength="350" FixedLength="false" Unicode="false" />
     <Property Name="feedback_date" Type="DateTime" Precision="0" />
     <NavigationProperty Name="person" Relationship="Self.FK_feedback_person" FromRole="feedback" ToRole="person" />
+  </EntityType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="Order_ID" />
+    </Key>
+    <Property Name="Order_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="User_ID" Type="Int32" />
+    <Property Name="Order_Date" Type="DateTime" Precision="0" />
+    <Property Name="Total_Amount" Type="Double" />
+    <Property Name="Payment_Method" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="person" Relationship="Self.FK_Orders_person" FromRole="Orders" ToRole="person" />
   </EntityType>
   <EntityType Name="payment">
     <Key>
@@ -59,7 +83,9 @@
     <Property Name="person_address" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
     <Property Name="person_role" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
     <NavigationProperty Name="carts" Relationship="Self.FK_cart_person" FromRole="person" ToRole="cart" />
+    <NavigationProperty Name="Cart_item" Relationship="Self.FK_Cart_item_person" FromRole="person" ToRole="Cart_item" />
     <NavigationProperty Name="feedbacks" Relationship="Self.FK_feedback_person" FromRole="person" ToRole="feedback" />
+    <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_person" FromRole="person" ToRole="Orders" />
     <NavigationProperty Name="payments" Relationship="Self.FK_payment_person" FromRole="person" ToRole="payment" />
     <NavigationProperty Name="voucherCustomers" Relationship="Self.FK_voucherCustomer_person" FromRole="person" ToRole="voucherCustomer" />
     <NavigationProperty Name="wishlists" Relationship="Self.FK_wishlist_person" FromRole="person" ToRole="wishlist" />
@@ -78,10 +104,10 @@
     <Property Name="product_size" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="product_rating" Type="Int32" />
     <Property Name="product_image" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Cart_item" Relationship="Self.FK_Cart_item_products" FromRole="products" ToRole="Cart_item" />
     <NavigationProperty Name="cartItems" Relationship="Self.FK_cartItem_products" FromRole="products" ToRole="cartItem" />
     <NavigationProperty Name="productSold" Relationship="Self.FK_productSold_products" FromRole="products" ToRole="productSold" />
     <NavigationProperty Name="wishlists" Relationship="Self.FK_wishlist_products" FromRole="products" ToRole="wishlist" />
-    <NavigationProperty Name="Cart_item" Relationship="TopG_clothingModel.FK_Cart_item_products" FromRole="product" ToRole="Cart_item" />
   </EntityType>
   <EntityType Name="productSold">
     <Key>
@@ -90,7 +116,7 @@
     <Property Name="product_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="product_quantity" Type="Int32" />
     <Property Name="product_price" Type="Int32" />
-    <Property Name="product_date" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="product_date" Type="DateTime" Precision="0" />
     <NavigationProperty Name="product" Relationship="Self.FK_productSold_products" FromRole="productSold" ToRole="products" />
   </EntityType>
   <EntityType Name="store">
@@ -172,6 +198,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_Cart_item_person">
+    <End Role="person" Type="Self.person" Multiplicity="0..1" />
+    <End Role="Cart_item" Type="Self.Cart_item" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="person">
+        <PropertyRef Name="person_id" />
+      </Principal>
+      <Dependent Role="Cart_item">
+        <PropertyRef Name="User_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Cart_item_products">
+    <End Role="products" Type="Self.product" Multiplicity="1" />
+    <End Role="Cart_item" Type="Self.Cart_item" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="products">
+        <PropertyRef Name="product_id" />
+      </Principal>
+      <Dependent Role="Cart_item">
+        <PropertyRef Name="product_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_cartItem_products">
     <End Role="products" Type="Self.product" Multiplicity="1" />
     <End Role="cartItem" Type="Self.cartItem" Multiplicity="*" />
@@ -193,6 +243,18 @@
       </Principal>
       <Dependent Role="feedback">
         <PropertyRef Name="person_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Orders_person">
+    <End Role="person" Type="Self.person" Multiplicity="0..1" />
+    <End Role="Orders" Type="Self.Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="person">
+        <PropertyRef Name="person_id" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="User_ID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -268,10 +330,12 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <EntityContainer Name="TopG_clothingEntities1" annotation:LazyLoadingEnabled="true">
+  <EntityContainer Name="TopG_clothingEntities" annotation:LazyLoadingEnabled="true">
     <EntitySet Name="carts" EntityType="Self.cart" />
+    <EntitySet Name="Cart_item" EntityType="Self.Cart_item" />
     <EntitySet Name="cartItems" EntityType="Self.cartItem" />
     <EntitySet Name="feedbacks" EntityType="Self.feedback" />
+    <EntitySet Name="Orders" EntityType="Self.Order" />
     <EntitySet Name="payments" EntityType="Self.payment" />
     <EntitySet Name="people" EntityType="Self.person" />
     <EntitySet Name="products" EntityType="Self.product" />
@@ -289,6 +353,14 @@
       <End Role="cart" EntitySet="carts" />
       <End Role="payment" EntitySet="payments" />
     </AssociationSet>
+    <AssociationSet Name="FK_Cart_item_person" Association="Self.FK_Cart_item_person">
+      <End Role="person" EntitySet="people" />
+      <End Role="Cart_item" EntitySet="Cart_item" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Cart_item_products" Association="Self.FK_Cart_item_products">
+      <End Role="products" EntitySet="products" />
+      <End Role="Cart_item" EntitySet="Cart_item" />
+    </AssociationSet>
     <AssociationSet Name="FK_cartItem_products" Association="Self.FK_cartItem_products">
       <End Role="products" EntitySet="products" />
       <End Role="cartItem" EntitySet="cartItems" />
@@ -296,6 +368,10 @@
     <AssociationSet Name="FK_feedback_person" Association="Self.FK_feedback_person">
       <End Role="person" EntitySet="people" />
       <End Role="feedback" EntitySet="feedbacks" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Orders_person" Association="Self.FK_Orders_person">
+      <End Role="person" EntitySet="people" />
+      <End Role="Orders" EntitySet="Orders" />
     </AssociationSet>
     <AssociationSet Name="FK_payment_person" Association="Self.FK_payment_person">
       <End Role="person" EntitySet="people" />
@@ -321,86 +397,5 @@
       <End Role="vouchers" EntitySet="vouchers" />
       <End Role="voucherCustomer" EntitySet="voucherCustomers" />
     </AssociationSet>
-    <FunctionImport Name="sp_alterdiagram">
-      <Parameter Name="diagramname" Mode="In" Type="String" />
-      <Parameter Name="owner_id" Mode="In" Type="Int32" />
-      <Parameter Name="version" Mode="In" Type="Int32" />
-      <Parameter Name="definition" Mode="In" Type="Binary" />
-    </FunctionImport>
-    <FunctionImport Name="sp_creatediagram">
-      <Parameter Name="diagramname" Mode="In" Type="String" />
-      <Parameter Name="owner_id" Mode="In" Type="Int32" />
-      <Parameter Name="version" Mode="In" Type="Int32" />
-      <Parameter Name="definition" Mode="In" Type="Binary" />
-    </FunctionImport>
-    <FunctionImport Name="sp_dropdiagram">
-      <Parameter Name="diagramname" Mode="In" Type="String" />
-      <Parameter Name="owner_id" Mode="In" Type="Int32" />
-    </FunctionImport>
-    <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(TopG_clothingModel.sp_helpdiagramdefinition_Result)">
-      <Parameter Name="diagramname" Mode="In" Type="String" />
-      <Parameter Name="owner_id" Mode="In" Type="Int32" />
-    </FunctionImport>
-    <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(TopG_clothingModel.sp_helpdiagrams_Result)">
-      <Parameter Name="diagramname" Mode="In" Type="String" />
-      <Parameter Name="owner_id" Mode="In" Type="Int32" />
-    </FunctionImport>
-    <FunctionImport Name="sp_renamediagram">
-      <Parameter Name="diagramname" Mode="In" Type="String" />
-      <Parameter Name="owner_id" Mode="In" Type="Int32" />
-      <Parameter Name="new_diagramname" Mode="In" Type="String" />
-    </FunctionImport>
-    <FunctionImport Name="sp_upgraddiagrams" />
-    <EntitySet Name="Cart_item" EntityType="TopG_clothingModel.Cart_item" />
-    <EntitySet Name="Orders" EntityType="TopG_clothingModel.Order" />
-    <AssociationSet Name="FK_Cart_item_products" Association="TopG_clothingModel.FK_Cart_item_products">
-      <End Role="product" EntitySet="products" />
-      <End Role="Cart_item" EntitySet="Cart_item" />
-    </AssociationSet>
   </EntityContainer>
-  <ComplexType Name="sp_helpdiagramdefinition_Result">
-    <Property Type="Int32" Name="version" Nullable="true" />
-    <Property Type="Binary" Name="definition" Nullable="true" />
-  </ComplexType>
-  <ComplexType Name="sp_helpdiagrams_Result">
-    <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
-    <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
-    <Property Type="Int32" Name="ID" Nullable="false" />
-    <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
-    <Property Type="Int32" Name="OwnerID" Nullable="false" />
-  </ComplexType>
-  <EntityType Name="Cart_item">
-    <Key>
-      <PropertyRef Name="product_id" />
-    </Key>
-    <Property Name="cartItem_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="product_id" Type="Int32" Nullable="false" />
-    <Property Name="cartItem_product_qty" Type="Int32" />
-    <Property Name="cartItem_date" Type="DateTime" Precision="0" />
-    <Property Name="cart_total" Type="Double" />
-    <Property Name="User_id" Type="Int32" />
-    <NavigationProperty Name="product" Relationship="TopG_clothingModel.FK_Cart_item_products" FromRole="Cart_item" ToRole="product" />
-  </EntityType>
-  <EntityType Name="Order">
-    <Key>
-      <PropertyRef Name="Order_ID" />
-    </Key>
-    <Property Name="Order_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="User_ID" Type="Int32" />
-    <Property Name="Order_Date" Type="DateTime" Precision="0" />
-    <Property Name="Total_Amount" Type="Double" />
-    <Property Name="Payment_Method" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-  </EntityType>
-  <Association Name="FK_Cart_item_products">
-    <End Type="TopG_clothingModel.product" Role="product" Multiplicity="1" />
-    <End Type="TopG_clothingModel.Cart_item" Role="Cart_item" Multiplicity="0..1" />
-    <ReferentialConstraint>
-      <Principal Role="product">
-        <PropertyRef Name="product_id" />
-      </Principal>
-      <Dependent Role="Cart_item">
-        <PropertyRef Name="product_id" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
 </Schema>

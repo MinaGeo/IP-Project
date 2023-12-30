@@ -62,6 +62,8 @@
                         <a href="#" class="dropbtn" style="color: red;"><b>Admin</b></a>
                         <div class="dropdown-content">
                             @Html.ActionLink("Users details", "Index", "Account", null, new { @class = "boldclass" })
+                            @Html.ActionLink("Products sold", "Index", "productSolds", null, new { @class = "boldclass" })
+
                         </div>
                     </li>
                 }

@@ -10,8 +10,8 @@ namespace WebApplication1.Models
     [MetadataType(typeof(metadata_person))] //bzwd deh kman // btsht8l only fel run time
     public partial class person
     {
-        [Display(Name = "Confirm Password")]
-        public string confirm_password { get; set; }
+        [Display(Name = "New Password")]
+        public string new_pass { get; set; }
     }
 
     public class metadata_person

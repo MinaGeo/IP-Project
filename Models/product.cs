@@ -17,6 +17,7 @@ namespace WebApplication1.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public product()
         {
+            this.Cart_item = new HashSet<Cart_item>();
             this.cartItems = new HashSet<cartItem>();
             this.wishlists = new HashSet<wishlist>();
         }
@@ -33,10 +34,11 @@ namespace WebApplication1.Models
         public string product_image { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Cart_item> Cart_item { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<cartItem> cartItems { get; set; }
         public virtual productSold productSold { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<wishlist> wishlists { get; set; }
-        public virtual Cart_item Cart_item { get; set; }
     }
 }

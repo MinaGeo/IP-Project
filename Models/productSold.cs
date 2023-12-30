@@ -17,7 +17,7 @@ namespace WebApplication1.Models
         public int product_id { get; set; }
         public Nullable<int> product_quantity { get; set; }
         public Nullable<int> product_price { get; set; }
-        public string product_date { get; set; }
+        public Nullable<System.DateTime> product_date { get; set; }
     
         public virtual product product { get; set; }
     }

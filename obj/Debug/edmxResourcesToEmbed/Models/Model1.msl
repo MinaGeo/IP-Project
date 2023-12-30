@@ -1,12 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-  <EntityContainerMapping StorageEntityContainer="TopG_clothingModelStoreContainer" CdmEntityContainer="TopG_clothingEntities1">
+  <EntityContainerMapping StorageEntityContainer="TopG_clothingModelStoreContainer" CdmEntityContainer="TopG_clothingEntities">
     <EntitySetMapping Name="carts">
       <EntityTypeMapping TypeName="TopG_clothingModel.cart">
         <MappingFragment StoreEntitySet="cart">
           <ScalarProperty Name="cart_id" ColumnName="cart_id" />
           <ScalarProperty Name="person_id" ColumnName="person_id" />
           <ScalarProperty Name="cart_date" ColumnName="cart_date" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Cart_item">
+      <EntityTypeMapping TypeName="TopG_clothingModel.Cart_item">
+        <MappingFragment StoreEntitySet="Cart_item">
+          <ScalarProperty Name="cartItem_id" ColumnName="cartItem_id" />
+          <ScalarProperty Name="product_id" ColumnName="product_id" />
+          <ScalarProperty Name="cartItem_product_qty" ColumnName="cartItem_product_qty" />
+          <ScalarProperty Name="cartItem_date" ColumnName="cartItem_date" />
+          <ScalarProperty Name="cart_total" ColumnName="cart_total" />
+          <ScalarProperty Name="User_id" ColumnName="User_id" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -28,6 +40,17 @@
           <ScalarProperty Name="person_id" ColumnName="person_id" />
           <ScalarProperty Name="feedback_desc" ColumnName="feedback_desc" />
           <ScalarProperty Name="feedback_date" ColumnName="feedback_date" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Orders">
+      <EntityTypeMapping TypeName="TopG_clothingModel.Order">
+        <MappingFragment StoreEntitySet="Orders">
+          <ScalarProperty Name="Order_ID" ColumnName="Order_ID" />
+          <ScalarProperty Name="User_ID" ColumnName="User_ID" />
+          <ScalarProperty Name="Order_Date" ColumnName="Order_Date" />
+          <ScalarProperty Name="Total_Amount" ColumnName="Total_Amount" />
+          <ScalarProperty Name="Payment_Method" ColumnName="Payment_Method" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -134,53 +157,6 @@
           <ScalarProperty Name="wishlist_id" ColumnName="wishlist_id" />
           <ScalarProperty Name="person_id" ColumnName="person_id" />
           <ScalarProperty Name="product_id" ColumnName="product_id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="TopG_clothingModel.Store.sp_alterdiagram" />
-    <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="TopG_clothingModel.Store.sp_creatediagram" />
-    <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="TopG_clothingModel.Store.sp_dropdiagram" />
-    <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="TopG_clothingModel.Store.sp_helpdiagramdefinition">
-      <ResultMapping>
-        <ComplexTypeMapping TypeName="TopG_clothingModel.sp_helpdiagramdefinition_Result">
-          <ScalarProperty Name="version" ColumnName="version" />
-          <ScalarProperty Name="definition" ColumnName="definition" />
-        </ComplexTypeMapping>
-      </ResultMapping>
-    </FunctionImportMapping>
-    <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="TopG_clothingModel.Store.sp_helpdiagrams">
-      <ResultMapping>
-        <ComplexTypeMapping TypeName="TopG_clothingModel.sp_helpdiagrams_Result">
-          <ScalarProperty Name="Database" ColumnName="Database" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="ID" ColumnName="ID" />
-          <ScalarProperty Name="Owner" ColumnName="Owner" />
-          <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
-        </ComplexTypeMapping>
-      </ResultMapping>
-    </FunctionImportMapping>
-    <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="TopG_clothingModel.Store.sp_renamediagram" />
-    <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="TopG_clothingModel.Store.sp_upgraddiagrams" />
-    <EntitySetMapping Name="Cart_item">
-      <EntityTypeMapping TypeName="TopG_clothingModel.Cart_item">
-        <MappingFragment StoreEntitySet="Cart_item">
-          <ScalarProperty Name="User_id" ColumnName="User_id" />
-          <ScalarProperty Name="cart_total" ColumnName="cart_total" />
-          <ScalarProperty Name="cartItem_date" ColumnName="cartItem_date" />
-          <ScalarProperty Name="cartItem_product_qty" ColumnName="cartItem_product_qty" />
-          <ScalarProperty Name="product_id" ColumnName="product_id" />
-          <ScalarProperty Name="cartItem_id" ColumnName="cartItem_id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Orders">
-      <EntityTypeMapping TypeName="TopG_clothingModel.Order">
-        <MappingFragment StoreEntitySet="Orders">
-          <ScalarProperty Name="Payment_Method" ColumnName="Payment_Method" />
-          <ScalarProperty Name="Total_Amount" ColumnName="Total_Amount" />
-          <ScalarProperty Name="Order_Date" ColumnName="Order_Date" />
-          <ScalarProperty Name="User_ID" ColumnName="User_ID" />
-          <ScalarProperty Name="Order_ID" ColumnName="Order_ID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

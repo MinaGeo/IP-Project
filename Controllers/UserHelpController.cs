@@ -15,7 +15,7 @@ namespace WebApplication1.Controllers
     public class UserHelpController : Controller
     {
         // GET: UserHelp
-        private TopG_clothingEntities1 db = new TopG_clothingEntities1();
+        private TopG_clothingEntities db = new TopG_clothingEntities();
         public ActionResult feedback()
         {
             return View(db.feedbacks.ToList());
