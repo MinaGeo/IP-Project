@@ -8,15 +8,26 @@
     <Property Name="person_id" Type="int" />
     <Property Name="cart_date" Type="date" />
   </EntityType>
+  <EntityType Name="Cart_item">
+    <Key>
+      <PropertyRef Name="product_id" />
+    </Key>
+    <Property Name="cartItem_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="product_id" Type="int" Nullable="false" />
+    <Property Name="cartItem_product_qty" Type="int" />
+    <Property Name="cartItem_date" Type="date" />
+    <Property Name="cart_total" Type="float" />
+    <Property Name="User_id" Type="int" />
+  </EntityType>
   <EntityType Name="cartItem">
     <Key>
       <PropertyRef Name="cartItem_id" />
     </Key>
     <Property Name="cartItem_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="product_id" Type="int" />
+    <Property Name="product_id" Type="int" Nullable="false" />
     <Property Name="cartItem_product_qty" Type="int" />
     <Property Name="cartItem_date" Type="date" />
-    <Property Name="cart_id" Type="int" />
+    <Property Name="cart_id" Type="float" />
   </EntityType>
   <EntityType Name="feedback">
     <Key>
@@ -26,6 +37,16 @@
     <Property Name="person_id" Type="int" Nullable="false" />
     <Property Name="feedback_desc" Type="varchar" MaxLength="350" />
     <Property Name="feedback_date" Type="date" />
+  </EntityType>
+  <EntityType Name="Orders">
+    <Key>
+      <PropertyRef Name="Order_ID" />
+    </Key>
+    <Property Name="Order_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="User_ID" Type="int" />
+    <Property Name="Order_Date" Type="date" />
+    <Property Name="Total_Amount" Type="float" />
+    <Property Name="Payment_Method" Type="varchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="payment">
     <Key>
@@ -127,6 +148,18 @@
     <Property Name="person_id" Type="int" Nullable="false" />
     <Property Name="product_id" Type="int" Nullable="false" />
   </EntityType>
+  <Association Name="FK_Cart_item_products">
+    <End Role="products" Type="Self.products" Multiplicity="1" />
+    <End Role="Cart_item" Type="Self.Cart_item" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="products">
+        <PropertyRef Name="product_id" />
+      </Principal>
+      <Dependent Role="Cart_item">
+        <PropertyRef Name="product_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_cart_person">
     <End Role="person" Type="Self.person" Multiplicity="0..1" />
     <End Role="cart" Type="Self.cart" Multiplicity="*" />
@@ -139,20 +172,8 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_cartItem_cart">
-    <End Role="cart" Type="Self.cart" Multiplicity="0..1" />
-    <End Role="cartItem" Type="Self.cartItem" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="cart">
-        <PropertyRef Name="cart_id" />
-      </Principal>
-      <Dependent Role="cartItem">
-        <PropertyRef Name="cart_id" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_cartItem_products">
-    <End Role="products" Type="Self.products" Multiplicity="0..1" />
+    <End Role="products" Type="Self.products" Multiplicity="1" />
     <End Role="cartItem" Type="Self.cartItem" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="products">
@@ -259,10 +280,43 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+  <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
   <EntityContainer Name="TopG_clothingModelStoreContainer">
     <EntitySet Name="cart" EntityType="Self.cart" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Cart_item" EntityType="Self.Cart_item" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="cartItem" EntityType="Self.cartItem" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="feedback" EntityType="Self.feedback" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="payment" EntityType="Self.payment" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="person" EntityType="Self.person" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="products" EntityType="Self.products" Schema="dbo" store:Type="Tables" />
@@ -272,13 +326,13 @@
     <EntitySet Name="voucherCustomer" EntityType="Self.voucherCustomer" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="vouchers" EntityType="Self.vouchers" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="wishlist" EntityType="Self.wishlist" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Cart_item_products" Association="Self.FK_Cart_item_products">
+      <End Role="products" EntitySet="products" />
+      <End Role="Cart_item" EntitySet="Cart_item" />
+    </AssociationSet>
     <AssociationSet Name="FK_cart_person" Association="Self.FK_cart_person">
       <End Role="person" EntitySet="person" />
       <End Role="cart" EntitySet="cart" />
-    </AssociationSet>
-    <AssociationSet Name="FK_cartItem_cart" Association="Self.FK_cartItem_cart">
-      <End Role="cart" EntitySet="cart" />
-      <End Role="cartItem" EntitySet="cartItem" />
     </AssociationSet>
     <AssociationSet Name="FK_cartItem_products" Association="Self.FK_cartItem_products">
       <End Role="products" EntitySet="products" />

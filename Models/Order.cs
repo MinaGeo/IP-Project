@@ -12,14 +12,12 @@ namespace WebApplication1.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class cartItem
+    public partial class Order
     {
-        public int cartItem_id { get; set; }
-        public int product_id { get; set; }
-        public Nullable<int> cartItem_product_qty { get; set; }
-        public Nullable<System.DateTime> cartItem_date { get; set; }
-        public Nullable<double> cart_id { get; set; }
-    
-        public virtual product product { get; set; }
+        public int Order_ID { get; set; }
+        public Nullable<int> User_ID { get; set; }
+        public Nullable<System.DateTime> Order_Date { get; set; }
+        public Nullable<double> Total_Amount { get; set; }
+        public string Payment_Method { get; set; }
     }
 }

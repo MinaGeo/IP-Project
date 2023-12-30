@@ -25,18 +25,25 @@
                     </div>
                     <h4>@product.product_price LE</h4>
                     <p><b>Quantity: @product.product_qty</b><p />
-                    <p>Size: @product.product_size</p>
                 </div>
-                <a href="#" id="shoppingcartlink"><i class="fa-solid fa-cart-shopping cart" id="shoppingcartsymbol"></i></a>
                 @if (Session["Per_role"] != null && Session["Per_role"].ToString() == "admin")
                 {
                     <div class="btn"> @Html.ActionLink("Edit", "Edit", new { id = product.product_id })</div>
                     <div class="btn"> @Html.ActionLink("Delete", "Delete", new { id = product.product_id })</div>
 
                 }
+                else if (Session["Per_person"] != null)
+                {
+                    <form action="@Url.Action("AddToCart", "Cart")" method="post">
+                        @Html.Hidden("productId", product.product_id)
+                        <button type="submit" class="btn"><i class="fa-solid fa-cart-shopping"></i> Add to Cart</button>
+                    </form>
+                    <div class="btn">@Html.ActionLink("Details", "Details", new { id = product.product_id })</div>
+                }
                 else
                 {
                     <div class="btn">@Html.ActionLink("Details", "Details", new { id = product.product_id })</div>
+
                 }
             </div>
 

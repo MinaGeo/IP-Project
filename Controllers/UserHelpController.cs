@@ -15,15 +15,12 @@ namespace WebApplication1.Controllers
     public class UserHelpController : Controller
     {
         // GET: UserHelp
-        private TopG_clothingEntities db = new TopG_clothingEntities();
+        private TopG_clothingEntities1 db = new TopG_clothingEntities1();
         public ActionResult feedback()
         {
             return View(db.feedbacks.ToList());
         }
-        public ActionResult ForgetPassword()
-        {
-            return View();
-        }
+ 
         public ActionResult FAQ()
         {
             return View();

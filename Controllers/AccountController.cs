@@ -15,7 +15,7 @@ namespace WebApplication1.Controllers
 
         // GET: Account
         //TASK OF LOGIN//
-        private TopG_clothingEntities db = new TopG_clothingEntities();
+        private TopG_clothingEntities1 db = new TopG_clothingEntities1();
 
 
         public ActionResult Details(int? id)
@@ -126,7 +126,6 @@ namespace WebApplication1.Controllers
                     Session["Per_person"] = rec.person_id;
                     Session["Person_mail"] = rec.person_email;
                 }
-                Session["Per_id"] = rec.person_id;
                 Session["Login_valid"] = true;
             
                 return RedirectToAction("Index","Home");
@@ -190,6 +189,9 @@ namespace WebApplication1.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-
+        public ActionResult ForgetPassword()
+        {
+            return View();
+        }
     }
 }

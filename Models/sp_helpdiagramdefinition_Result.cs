@@ -10,16 +10,10 @@
 namespace WebApplication1.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class cartItem
+    public partial class sp_helpdiagramdefinition_Result
     {
-        public int cartItem_id { get; set; }
-        public int product_id { get; set; }
-        public Nullable<int> cartItem_product_qty { get; set; }
-        public Nullable<System.DateTime> cartItem_date { get; set; }
-        public Nullable<double> cart_id { get; set; }
-    
-        public virtual product product { get; set; }
+        public Nullable<int> version { get; set; }
+        public byte[] definition { get; set; }
     }
 }

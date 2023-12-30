@@ -23,6 +23,7 @@ namespace WebApplication1.Models
     
         public int product_id { get; set; }
         public string product_brand_name { get; set; }
+        public string product_name { get; set; }
         public Nullable<int> product_price { get; set; }
         public string product_desc { get; set; }
         public Nullable<int> product_qty { get; set; }
@@ -30,12 +31,12 @@ namespace WebApplication1.Models
         public string product_size { get; set; }
         public Nullable<int> product_rating { get; set; }
         public string product_image { get; set; }
-        public string product_name { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<cartItem> cartItems { get; set; }
         public virtual productSold productSold { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<wishlist> wishlists { get; set; }
+        public virtual Cart_item Cart_item { get; set; }
     }
 }

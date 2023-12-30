@@ -34,9 +34,18 @@
                     <div class="btn"> @Html.ActionLink("Delete", "Delete", new { id = product.product_id })</div>
 
                 }
+                else if (Session["Per_person"] != null)
+                {
+                    <form action="@Url.Action("AddToCart", "Cart")" method="post">
+                        @Html.Hidden("productId", product.product_id)
+                        <button type="submit" class="btn"><i class="fa-solid fa-cart-shopping"></i> Add to Cart</button>
+                    </form>
+                    <div class="btn">@Html.ActionLink("Details", "Details", new { id = product.product_id })</div>
+                }
                 else
                 {
                     <div class="btn">@Html.ActionLink("Details", "Details", new { id = product.product_id })</div>
+
                 }
             </div>
 

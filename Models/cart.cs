@@ -17,7 +17,6 @@ namespace WebApplication1.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public cart()
         {
-            this.cartItems = new HashSet<cartItem>();
             this.payments = new HashSet<payment>();
         }
     
@@ -26,8 +25,6 @@ namespace WebApplication1.Models
         public Nullable<System.DateTime> cart_date { get; set; }
     
         public virtual person person { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<cartItem> cartItems { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<payment> payments { get; set; }
     }

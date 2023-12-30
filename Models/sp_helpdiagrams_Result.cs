@@ -10,16 +10,13 @@
 namespace WebApplication1.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class cartItem
+    public partial class sp_helpdiagrams_Result
     {
-        public int cartItem_id { get; set; }
-        public int product_id { get; set; }
-        public Nullable<int> cartItem_product_qty { get; set; }
-        public Nullable<System.DateTime> cartItem_date { get; set; }
-        public Nullable<double> cart_id { get; set; }
-    
-        public virtual product product { get; set; }
+        public string Database { get; set; }
+        public string Name { get; set; }
+        public int ID { get; set; }
+        public string Owner { get; set; }
+        public int OwnerID { get; set; }
     }
 }

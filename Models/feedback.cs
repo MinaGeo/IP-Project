@@ -14,7 +14,7 @@ namespace WebApplication1.Models
 
     public partial class feedback
     {
-        private TopG_clothingEntities db = new TopG_clothingEntities();
+        private TopG_clothingEntities1 db = new TopG_clothingEntities1();
 
         public int feedback_id { get; set; }
         public int person_id { get; set; }

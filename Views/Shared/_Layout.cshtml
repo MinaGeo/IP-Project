@@ -54,7 +54,7 @@
                 }
 
 
-                <li><a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a></li>
+                <li><a href="@Url.Action("Index", "Cart")"><i class="fa-solid fa-cart-shopping"></i></a></li>
 
                 @if (Session["Per_role"] != null && Session["Per_role"].ToString() == "admin")
                 {
@@ -70,7 +70,7 @@
                     <li class="dropdown">
                         <a href="#" class="dropbtn"><b>Profile</b></a>
                         <div class="dropdown-content">
-                            @Html.ActionLink("My details", "Details", "Account", new { id = Session["Per_id"] }, new { @class = "boldclass" })
+                            @Html.ActionLink("My details", "Details", "Account", new { id = Session["Per_person"] }, new { @class = "boldclass" })
                         </div>
                     </li>
                 }

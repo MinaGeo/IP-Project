@@ -13,15 +13,26 @@
           <Property Name="person_id" Type="int" />
           <Property Name="cart_date" Type="date" />
         </EntityType>
+        <EntityType Name="Cart_item">
+          <Key>
+            <PropertyRef Name="product_id" />
+          </Key>
+          <Property Name="cartItem_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="product_id" Type="int" Nullable="false" />
+          <Property Name="cartItem_product_qty" Type="int" />
+          <Property Name="cartItem_date" Type="date" />
+          <Property Name="cart_total" Type="float" />
+          <Property Name="User_id" Type="int" />
+        </EntityType>
         <EntityType Name="cartItem">
           <Key>
             <PropertyRef Name="cartItem_id" />
           </Key>
           <Property Name="cartItem_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="product_id" Type="int" />
+          <Property Name="product_id" Type="int" Nullable="false" />
           <Property Name="cartItem_product_qty" Type="int" />
           <Property Name="cartItem_date" Type="date" />
-          <Property Name="cart_id" Type="int" />
+          <Property Name="cart_id" Type="float" />
         </EntityType>
         <EntityType Name="feedback">
           <Key>
@@ -31,6 +42,16 @@
           <Property Name="person_id" Type="int" Nullable="false" />
           <Property Name="feedback_desc" Type="varchar" MaxLength="350" />
           <Property Name="feedback_date" Type="date" />
+        </EntityType>
+        <EntityType Name="Orders">
+          <Key>
+            <PropertyRef Name="Order_ID" />
+          </Key>
+          <Property Name="Order_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="User_ID" Type="int" />
+          <Property Name="Order_Date" Type="date" />
+          <Property Name="Total_Amount" Type="float" />
+          <Property Name="Payment_Method" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="payment">
           <Key>
@@ -132,6 +153,18 @@
           <Property Name="person_id" Type="int" Nullable="false" />
           <Property Name="product_id" Type="int" Nullable="false" />
         </EntityType>
+        <Association Name="FK_Cart_item_products">
+          <End Role="products" Type="Self.products" Multiplicity="1" />
+          <End Role="Cart_item" Type="Self.Cart_item" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="products">
+              <PropertyRef Name="product_id" />
+            </Principal>
+            <Dependent Role="Cart_item">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_cart_person">
           <End Role="person" Type="Self.person" Multiplicity="0..1" />
           <End Role="cart" Type="Self.cart" Multiplicity="*" />
@@ -144,20 +177,8 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_cartItem_cart">
-          <End Role="cart" Type="Self.cart" Multiplicity="0..1" />
-          <End Role="cartItem" Type="Self.cartItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="cart">
-              <PropertyRef Name="cart_id" />
-            </Principal>
-            <Dependent Role="cartItem">
-              <PropertyRef Name="cart_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_cartItem_products">
-          <End Role="products" Type="Self.products" Multiplicity="0..1" />
+          <End Role="products" Type="Self.products" Multiplicity="1" />
           <End Role="cartItem" Type="Self.cartItem" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="products">
@@ -264,10 +285,43 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="TopG_clothingModelStoreContainer">
           <EntitySet Name="cart" EntityType="Self.cart" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cart_item" EntityType="Self.Cart_item" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="cartItem" EntityType="Self.cartItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="feedback" EntityType="Self.feedback" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="payment" EntityType="Self.payment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="person" EntityType="Self.person" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="products" EntityType="Self.products" Schema="dbo" store:Type="Tables" />
@@ -277,13 +331,13 @@
           <EntitySet Name="voucherCustomer" EntityType="Self.voucherCustomer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="vouchers" EntityType="Self.vouchers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="wishlist" EntityType="Self.wishlist" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Cart_item_products" Association="Self.FK_Cart_item_products">
+            <End Role="products" EntitySet="products" />
+            <End Role="Cart_item" EntitySet="Cart_item" />
+          </AssociationSet>
           <AssociationSet Name="FK_cart_person" Association="Self.FK_cart_person">
             <End Role="person" EntitySet="person" />
             <End Role="cart" EntitySet="cart" />
-          </AssociationSet>
-          <AssociationSet Name="FK_cartItem_cart" Association="Self.FK_cartItem_cart">
-            <End Role="cart" EntitySet="cart" />
-            <End Role="cartItem" EntitySet="cartItem" />
           </AssociationSet>
           <AssociationSet Name="FK_cartItem_products" Association="Self.FK_cartItem_products">
             <End Role="products" EntitySet="products" />
@@ -334,7 +388,6 @@
           <Property Name="person_id" Type="Int32" />
           <Property Name="cart_date" Type="DateTime" Precision="0" />
           <NavigationProperty Name="person" Relationship="Self.FK_cart_person" FromRole="cart" ToRole="person" />
-          <NavigationProperty Name="cartItems" Relationship="Self.FK_cartItem_cart" FromRole="cart" ToRole="cartItem" />
           <NavigationProperty Name="payments" Relationship="Self.FK_payment_cart" FromRole="cart" ToRole="payment" />
         </EntityType>
         <EntityType Name="cartItem">
@@ -342,11 +395,10 @@
             <PropertyRef Name="cartItem_id" />
           </Key>
           <Property Name="cartItem_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="product_id" Type="Int32" />
+          <Property Name="product_id" Type="Int32" Nullable="false" />
           <Property Name="cartItem_product_qty" Type="Int32" />
           <Property Name="cartItem_date" Type="DateTime" Precision="0" />
-          <Property Name="cart_id" Type="Int32" />
-          <NavigationProperty Name="cart" Relationship="Self.FK_cartItem_cart" FromRole="cartItem" ToRole="cart" />
+          <Property Name="cart_id" Type="Double" />
           <NavigationProperty Name="product" Relationship="Self.FK_cartItem_products" FromRole="cartItem" ToRole="products" />
         </EntityType>
         <EntityType Name="feedback">
@@ -390,7 +442,7 @@
           <NavigationProperty Name="feedbacks" Relationship="Self.FK_feedback_person" FromRole="person" ToRole="feedback" />
           <NavigationProperty Name="payments" Relationship="Self.FK_payment_person" FromRole="person" ToRole="payment" />
           <NavigationProperty Name="voucherCustomers" Relationship="Self.FK_voucherCustomer_person" FromRole="person" ToRole="voucherCustomer" />
-          <NavigationProperty Name="wishlists" Relationship="TopG_clothingModel.FK_wishlist_person" FromRole="person" ToRole="wishlist" />
+          <NavigationProperty Name="wishlists" Relationship="Self.FK_wishlist_person" FromRole="person" ToRole="wishlist" />
         </EntityType>
         <EntityType Name="product">
           <Key>
@@ -398,17 +450,28 @@
           </Key>
           <Property Name="product_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="product_brand_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="product_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="product_price" Type="Int32" />
           <Property Name="product_desc" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
           <Property Name="product_qty" Type="Int32" />
           <Property Name="product_type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="product_size" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="product_rating" Type="Int32" />
-          <NavigationProperty Name="cartItems" Relationship="Self.FK_cartItem_products" FromRole="products" ToRole="cartItem" />
           <Property Name="product_image" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="productSold" Relationship="TopG_clothingModel.FK_productSold_products" FromRole="product" ToRole="productSold" />
-          <Property Name="product_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="wishlists" Relationship="TopG_clothingModel.FK_wishlist_products" FromRole="product" ToRole="wishlist" />
+          <NavigationProperty Name="cartItems" Relationship="Self.FK_cartItem_products" FromRole="products" ToRole="cartItem" />
+          <NavigationProperty Name="productSold" Relationship="Self.FK_productSold_products" FromRole="products" ToRole="productSold" />
+          <NavigationProperty Name="wishlists" Relationship="Self.FK_wishlist_products" FromRole="products" ToRole="wishlist" />
+          <NavigationProperty Name="Cart_item" Relationship="TopG_clothingModel.FK_Cart_item_products" FromRole="product" ToRole="Cart_item" />
+        </EntityType>
+        <EntityType Name="productSold">
+          <Key>
+            <PropertyRef Name="product_id" />
+          </Key>
+          <Property Name="product_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="product_quantity" Type="Int32" />
+          <Property Name="product_price" Type="Int32" />
+          <Property Name="product_date" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="product" Relationship="Self.FK_productSold_products" FromRole="productSold" ToRole="products" />
         </EntityType>
         <EntityType Name="store">
           <Key>
@@ -453,6 +516,18 @@
           <Property Name="voucher_qty" Type="Int32" />
           <NavigationProperty Name="voucherCustomers" Relationship="Self.FK_voucherCustomer_vouchers" FromRole="vouchers" ToRole="voucherCustomer" />
         </EntityType>
+        <EntityType Name="wishlist">
+          <Key>
+            <PropertyRef Name="wishlist_id" />
+            <PropertyRef Name="person_id" />
+            <PropertyRef Name="product_id" />
+          </Key>
+          <Property Name="wishlist_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="person_id" Type="Int32" Nullable="false" />
+          <Property Name="product_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="person" Relationship="Self.FK_wishlist_person" FromRole="wishlist" ToRole="person" />
+          <NavigationProperty Name="product" Relationship="Self.FK_wishlist_products" FromRole="wishlist" ToRole="products" />
+        </EntityType>
         <Association Name="FK_cart_person">
           <End Role="person" Type="Self.person" Multiplicity="0..1" />
           <End Role="cart" Type="Self.cart" Multiplicity="*" />
@@ -462,18 +537,6 @@
             </Principal>
             <Dependent Role="cart">
               <PropertyRef Name="person_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_cartItem_cart">
-          <End Role="cart" Type="Self.cart" Multiplicity="0..1" />
-          <End Role="cartItem" Type="Self.cartItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="cart">
-              <PropertyRef Name="cart_id" />
-            </Principal>
-            <Dependent Role="cartItem">
-              <PropertyRef Name="cart_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -490,7 +553,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_cartItem_products">
-          <End Role="products" Type="Self.product" Multiplicity="0..1" />
+          <End Role="products" Type="Self.product" Multiplicity="1" />
           <End Role="cartItem" Type="Self.cartItem" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="products">
@@ -537,6 +600,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_wishlist_person">
+          <End Role="person" Type="Self.person" Multiplicity="1" />
+          <End Role="wishlist" Type="Self.wishlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="person">
+              <PropertyRef Name="person_id" />
+            </Principal>
+            <Dependent Role="wishlist">
+              <PropertyRef Name="person_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_productSold_products">
+          <End Role="products" Type="Self.product" Multiplicity="1" />
+          <End Role="productSold" Type="Self.productSold" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="products">
+              <PropertyRef Name="product_id" />
+            </Principal>
+            <Dependent Role="productSold">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_wishlist_products">
+          <End Role="products" Type="Self.product" Multiplicity="1" />
+          <End Role="wishlist" Type="Self.wishlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="products">
+              <PropertyRef Name="product_id" />
+            </Principal>
+            <Dependent Role="wishlist">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_voucherCustomer_vouchers">
           <End Role="vouchers" Type="Self.voucher" Multiplicity="1" />
           <End Role="voucherCustomer" Type="Self.voucherCustomer" Multiplicity="*" />
@@ -549,24 +648,22 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="TopG_clothingEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="TopG_clothingEntities1" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="carts" EntityType="Self.cart" />
           <EntitySet Name="cartItems" EntityType="Self.cartItem" />
           <EntitySet Name="feedbacks" EntityType="Self.feedback" />
           <EntitySet Name="payments" EntityType="Self.payment" />
           <EntitySet Name="people" EntityType="Self.person" />
           <EntitySet Name="products" EntityType="Self.product" />
+          <EntitySet Name="productSolds" EntityType="Self.productSold" />
           <EntitySet Name="stores" EntityType="Self.store" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
           <EntitySet Name="voucherCustomers" EntityType="Self.voucherCustomer" />
           <EntitySet Name="vouchers" EntityType="Self.voucher" />
+          <EntitySet Name="wishlists" EntityType="Self.wishlist" />
           <AssociationSet Name="FK_cart_person" Association="Self.FK_cart_person">
             <End Role="person" EntitySet="people" />
             <End Role="cart" EntitySet="carts" />
-          </AssociationSet>
-          <AssociationSet Name="FK_cartItem_cart" Association="Self.FK_cartItem_cart">
-            <End Role="cart" EntitySet="carts" />
-            <End Role="cartItem" EntitySet="cartItems" />
           </AssociationSet>
           <AssociationSet Name="FK_payment_cart" Association="Self.FK_payment_cart">
             <End Role="cart" EntitySet="carts" />
@@ -588,91 +685,110 @@
             <End Role="person" EntitySet="people" />
             <End Role="voucherCustomer" EntitySet="voucherCustomers" />
           </AssociationSet>
+          <AssociationSet Name="FK_wishlist_person" Association="Self.FK_wishlist_person">
+            <End Role="person" EntitySet="people" />
+            <End Role="wishlist" EntitySet="wishlists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_productSold_products" Association="Self.FK_productSold_products">
+            <End Role="products" EntitySet="products" />
+            <End Role="productSold" EntitySet="productSolds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_wishlist_products" Association="Self.FK_wishlist_products">
+            <End Role="products" EntitySet="products" />
+            <End Role="wishlist" EntitySet="wishlists" />
+          </AssociationSet>
           <AssociationSet Name="FK_voucherCustomer_vouchers" Association="Self.FK_voucherCustomer_vouchers">
             <End Role="vouchers" EntitySet="vouchers" />
             <End Role="voucherCustomer" EntitySet="voucherCustomers" />
           </AssociationSet>
-          <EntitySet Name="productSolds" EntityType="TopG_clothingModel.productSold" />
-          <AssociationSet Name="FK_productSold_products" Association="TopG_clothingModel.FK_productSold_products">
+          <FunctionImport Name="sp_alterdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_creatediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(TopG_clothingModel.sp_helpdiagramdefinition_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(TopG_clothingModel.sp_helpdiagrams_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_renamediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="new_diagramname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_upgraddiagrams" />
+          <EntitySet Name="Cart_item" EntityType="TopG_clothingModel.Cart_item" />
+          <EntitySet Name="Orders" EntityType="TopG_clothingModel.Order" />
+          <AssociationSet Name="FK_Cart_item_products" Association="TopG_clothingModel.FK_Cart_item_products">
             <End Role="product" EntitySet="products" />
-            <End Role="productSold" EntitySet="productSolds" />
+            <End Role="Cart_item" EntitySet="Cart_item" />
           </AssociationSet>
-          <EntitySet Name="wishlists" EntityType="TopG_clothingModel.wishlist" />
-          <AssociationSet Name="FK_wishlist_person" Association="TopG_clothingModel.FK_wishlist_person">
-            <End Role="person" EntitySet="people" />
-            <End Role="wishlist" EntitySet="wishlists" />
-          </AssociationSet>
-          <AssociationSet Name="FK_wishlist_products" Association="TopG_clothingModel.FK_wishlist_products">
-            <End Role="product" EntitySet="products" />
-            <End Role="wishlist" EntitySet="wishlists" />
-          </AssociationSet>
-       
         </EntityContainer>
-        <EntityType Name="productSold">
+        <ComplexType Name="sp_helpdiagramdefinition_Result">
+          <Property Type="Int32" Name="version" Nullable="true" />
+          <Property Type="Binary" Name="definition" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagrams_Result">
+          <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+          <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
+        <EntityType Name="Cart_item">
           <Key>
             <PropertyRef Name="product_id" />
           </Key>
-          <Property Name="product_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="product_quantity" Type="Int32" />
-          <Property Name="product_price" Type="Int32" />
-          <Property Name="product_date" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <NavigationProperty Name="product" Relationship="TopG_clothingModel.FK_productSold_products" FromRole="productSold" ToRole="product" />
-        </EntityType>
-        <Association Name="FK_productSold_products">
-          <End Type="TopG_clothingModel.product" Role="product" Multiplicity="1" />
-          <End Type="TopG_clothingModel.productSold" Role="productSold" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="product">
-              <PropertyRef Name="product_id" />
-            </Principal>
-            <Dependent Role="productSold">
-              <PropertyRef Name="product_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="wishlist">
-          <Key>
-            <PropertyRef Name="wishlist_id" />
-            <PropertyRef Name="person_id" />
-            <PropertyRef Name="product_id" />
-          </Key>
-          <Property Name="wishlist_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="person_id" Type="Int32" Nullable="false" />
+          <Property Name="cartItem_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="product_id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="person" Relationship="TopG_clothingModel.FK_wishlist_person" FromRole="wishlist" ToRole="person" />
-          <NavigationProperty Name="product" Relationship="TopG_clothingModel.FK_wishlist_products" FromRole="wishlist" ToRole="product" />
+          <Property Name="cartItem_product_qty" Type="Int32" />
+          <Property Name="cartItem_date" Type="DateTime" Precision="0" />
+          <Property Name="cart_total" Type="Double" />
+          <Property Name="User_id" Type="Int32" />
+          <NavigationProperty Name="product" Relationship="TopG_clothingModel.FK_Cart_item_products" FromRole="Cart_item" ToRole="product" />
         </EntityType>
-        <Association Name="FK_wishlist_person">
-          <End Type="TopG_clothingModel.person" Role="person" Multiplicity="1" />
-          <End Type="TopG_clothingModel.wishlist" Role="wishlist" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="person">
-              <PropertyRef Name="person_id" />
-            </Principal>
-            <Dependent Role="wishlist">
-              <PropertyRef Name="person_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_wishlist_products">
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="Order_ID" />
+          </Key>
+          <Property Name="Order_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="User_ID" Type="Int32" />
+          <Property Name="Order_Date" Type="DateTime" Precision="0" />
+          <Property Name="Total_Amount" Type="Double" />
+          <Property Name="Payment_Method" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_Cart_item_products">
           <End Type="TopG_clothingModel.product" Role="product" Multiplicity="1" />
-          <End Type="TopG_clothingModel.wishlist" Role="wishlist" Multiplicity="*" />
+          <End Type="TopG_clothingModel.Cart_item" Role="Cart_item" Multiplicity="0..1" />
           <ReferentialConstraint>
             <Principal Role="product">
               <PropertyRef Name="product_id" />
             </Principal>
-            <Dependent Role="wishlist">
+            <Dependent Role="Cart_item">
               <PropertyRef Name="product_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="TopG_clothingModelStoreContainer" CdmEntityContainer="TopG_clothingEntities">
+        <EntityContainerMapping StorageEntityContainer="TopG_clothingModelStoreContainer" CdmEntityContainer="TopG_clothingEntities1">
           <EntitySetMapping Name="carts">
             <EntityTypeMapping TypeName="TopG_clothingModel.cart">
               <MappingFragment StoreEntitySet="cart">
@@ -734,16 +850,26 @@
           <EntitySetMapping Name="products">
             <EntityTypeMapping TypeName="TopG_clothingModel.product">
               <MappingFragment StoreEntitySet="products">
-                <ScalarProperty Name="product_name" ColumnName="product_name" />
-                <ScalarProperty Name="product_image" ColumnName="product_image" />
                 <ScalarProperty Name="product_id" ColumnName="product_id" />
                 <ScalarProperty Name="product_brand_name" ColumnName="product_brand_name" />
+                <ScalarProperty Name="product_name" ColumnName="product_name" />
                 <ScalarProperty Name="product_price" ColumnName="product_price" />
                 <ScalarProperty Name="product_desc" ColumnName="product_desc" />
                 <ScalarProperty Name="product_qty" ColumnName="product_qty" />
                 <ScalarProperty Name="product_type" ColumnName="product_type" />
                 <ScalarProperty Name="product_size" ColumnName="product_size" />
                 <ScalarProperty Name="product_rating" ColumnName="product_rating" />
+                <ScalarProperty Name="product_image" ColumnName="product_image" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="productSolds">
+            <EntityTypeMapping TypeName="TopG_clothingModel.productSold">
+              <MappingFragment StoreEntitySet="productSold">
+                <ScalarProperty Name="product_id" ColumnName="product_id" />
+                <ScalarProperty Name="product_quantity" ColumnName="product_quantity" />
+                <ScalarProperty Name="product_price" ColumnName="product_price" />
+                <ScalarProperty Name="product_date" ColumnName="product_date" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -790,22 +916,59 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="productSolds">
-            <EntityTypeMapping TypeName="TopG_clothingModel.productSold">
-              <MappingFragment StoreEntitySet="productSold">
-                <ScalarProperty Name="product_date" ColumnName="product_date" />
-                <ScalarProperty Name="product_price" ColumnName="product_price" />
-                <ScalarProperty Name="product_quantity" ColumnName="product_quantity" />
+          <EntitySetMapping Name="wishlists">
+            <EntityTypeMapping TypeName="TopG_clothingModel.wishlist">
+              <MappingFragment StoreEntitySet="wishlist">
+                <ScalarProperty Name="wishlist_id" ColumnName="wishlist_id" />
+                <ScalarProperty Name="person_id" ColumnName="person_id" />
                 <ScalarProperty Name="product_id" ColumnName="product_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="wishlists">
-            <EntityTypeMapping TypeName="TopG_clothingModel.wishlist">
-              <MappingFragment StoreEntitySet="wishlist">
+          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="TopG_clothingModel.Store.sp_alterdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="TopG_clothingModel.Store.sp_creatediagram" />
+          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="TopG_clothingModel.Store.sp_dropdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="TopG_clothingModel.Store.sp_helpdiagramdefinition">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TopG_clothingModel.sp_helpdiagramdefinition_Result">
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="TopG_clothingModel.Store.sp_helpdiagrams">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TopG_clothingModel.sp_helpdiagrams_Result">
+                <ScalarProperty Name="Database" ColumnName="Database" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="TopG_clothingModel.Store.sp_renamediagram" />
+          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="TopG_clothingModel.Store.sp_upgraddiagrams" />
+          <EntitySetMapping Name="Cart_item">
+            <EntityTypeMapping TypeName="TopG_clothingModel.Cart_item">
+              <MappingFragment StoreEntitySet="Cart_item">
+                <ScalarProperty Name="User_id" ColumnName="User_id" />
+                <ScalarProperty Name="cart_total" ColumnName="cart_total" />
+                <ScalarProperty Name="cartItem_date" ColumnName="cartItem_date" />
+                <ScalarProperty Name="cartItem_product_qty" ColumnName="cartItem_product_qty" />
                 <ScalarProperty Name="product_id" ColumnName="product_id" />
-                <ScalarProperty Name="person_id" ColumnName="person_id" />
-                <ScalarProperty Name="wishlist_id" ColumnName="wishlist_id" />
+                <ScalarProperty Name="cartItem_id" ColumnName="cartItem_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Orders">
+            <EntityTypeMapping TypeName="TopG_clothingModel.Order">
+              <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="Payment_Method" ColumnName="Payment_Method" />
+                <ScalarProperty Name="Total_Amount" ColumnName="Total_Amount" />
+                <ScalarProperty Name="Order_Date" ColumnName="Order_Date" />
+                <ScalarProperty Name="User_ID" ColumnName="User_ID" />
+                <ScalarProperty Name="Order_ID" ColumnName="Order_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
